@@ -1,0 +1,432 @@
+/* App.css - Citymapper UI Clone */
+:root {
+  --cm-green: #3EA142;
+  --cm-blue: #0088cc;
+  --cm-dark: #333333;
+  --cm-gray: #f5f5f5;
+  --cm-text-gray: #777777;
+  --cm-border: #e0e0e0;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--cm-gray);
+}
+
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Map Container Full Screen */
+.map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Floating Settings / Profile Icon */
+.floating-settings {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--cm-green);
+}
+
+/* Floating Geolocation Button */
+.floating-geo {
+  position: absolute;
+  bottom: calc(45vh + 20px);
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--cm-blue);
+  transition: background-color 0.2s;
+}
+.floating-geo:active {
+  background-color: #eee;
+}
+
+/* Bottom Sheet Container */
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45vh;
+  background-color: var(--cm-green);
+  z-index: 10;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0 0 0;
+}
+
+/* Search Card (On va où ?) */
+.search-card {
+  background: white;
+  border-radius: 12px;
+  margin: 0 15px 15px 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--cm-border);
+  cursor: pointer;
+}
+
+.search-icon {
+  background: #2a5a8a;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.search-title {
+  flex: 1;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--cm-dark);
+}
+
+.search-dots {
+  color: #ccc;
+  font-size: 24px;
+}
+
+.quick-actions {
+  display: flex;
+  background: white;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--cm-dark);
+  font-size: 14px;
+}
+.action-btn:not(:last-child) {
+  border-right: 1px solid var(--cm-border);
+}
+.action-btn .icon {
+  background: #2a5a8a;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+/* Transport Modes Grid */
+.transport-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 0 15px 15px 15px;
+}
+
+.transport-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 10px 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 11px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.transport-item:hover, .transport-item.active {
+  background-color: rgba(255,255,255,0.3);
+}
+.transport-item .icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+/* Info Card (Recent/Nearby) */
+.info-card {
+  background: white;
+  border-radius: 12px;
+  margin: 0 15px 15px 15px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  min-height: 80px;
+}
+.info-card-image {
+  width: 60px;
+  height: 60px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+.info-card-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.line-placeholder {
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+}
+.line-placeholder.long { width: 80%; }
+.line-placeholder.short { width: 50%; }
+
+/* Out of Bounds Banner */
+.out-of-bounds-banner {
+  background-color: #007aff;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+}
+.out-of-bounds-banner .banner-icon {
+  margin-right: 15px;
+  font-size: 24px;
+  background: white;
+  color: #007aff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.out-of-bounds-banner .banner-text {
+  flex: 1;
+}
+.out-of-bounds-banner .banner-text span {
+  display: block;
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: 4px;
+}
+
+/* Expanded Search Panel (replaces SearchBar component style) */
+.expanded-search-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-panel-header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--cm-green);
+  color: white;
+}
+.search-panel-header .back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+.search-panel-header .search-inputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.search-input-wrapper input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.search-results {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+}
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--cm-border);
+  cursor: pointer;
+}
+.search-result-item:hover {
+  background-color: var(--cm-gray);
+}
+.search-result-item .icon {
+  margin-right: 15px;
+  font-size: 20px;
+  color: var(--cm-text-gray);
+}
+.search-result-item .details {
+  display: flex;
+  flex-direction: column;
+}
+.search-result-item .name {
+  font-weight: bold;
+  color: var(--cm-dark);
+  font-size: 16px;
+}
+.search-result-item .address {
+  font-size: 12px;
+  color: var(--cm-text-gray);
+  margin-top: 4px;
+}
+
+/* User Location Marker */
+.user-location-marker {
+  width: 16px;
+  height: 16px;
+  background-color: #007aff;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 122, 255, 0.5);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 122, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+}
+
+/* Corrections et améliorations */
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.search-input-wrapper.focused {
+  border-color: #3EA142;
+  background: #f0faf0;
+}
+
+.search-input-wrapper input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+  color: #1a1a1a;
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.route-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Animation loading */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* Styles pour la carte Leaflet DakarMobile */
+.map-container {
+  height: 350px;
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+}

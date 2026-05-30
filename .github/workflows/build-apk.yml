@@ -1,0 +1,161 @@
+name: Build APK Passager + Chauffeur
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-passager:
+    name: APK Passager
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install deps
+        run: npm install
+
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core@latest @capacitor/android@latest \
+                      @capacitor/cli@latest @capacitor/splash-screen@latest \
+                      @capacitor/status-bar@latest --legacy-peer-deps
+
+      - name: Build Vite (Passager)
+        run: npm run build
+        env:
+          VITE_APP_MODE: passager
+
+      - name: Write capacitor.config.json
+        run: |
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "sn.dakar.passager",
+            "appName": "DakarMobile Passager",
+            "webDir": "dist",
+            "android": { "backgroundColor": "#1e40af" },
+            "plugins": {
+              "SplashScreen": { "launchShowDuration": 2000, "backgroundColor": "#1e40af" }
+            }
+          }
+          EOF
+
+      - name: Add & sync Android
+        run: |
+          npx cap add android 2>/dev/null || true
+          npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build APK debug
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+        env:
+          GRADLE_OPTS: "-Xmx2g"
+
+      - name: Rename & stage APK
+        run: |
+          mkdir -p release
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             release/DakarMobile-Passager-debug.apk
+
+      - name: Upload APK Passager
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK-Passager
+          path: release/DakarMobile-Passager-debug.apk
+          retention-days: 30
+
+  build-chauffeur:
+    name: APK Chauffeur
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install deps
+        run: npm install
+
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core@latest @capacitor/android@latest \
+                      @capacitor/cli@latest @capacitor/splash-screen@latest \
+                      @capacitor/status-bar@latest --legacy-peer-deps
+
+      - name: Build Vite (Chauffeur)
+        run: |
+          cat > vite.chauffeur.config.js << 'EOF'
+          import { defineConfig } from 'vite'
+          import react from '@vitejs/plugin-react'
+          export default defineConfig({
+            plugins: [react()],
+            define: { 'import.meta.env.VITE_APP_MODE': '"chauffeur"' },
+            build: { outDir: 'dist-chauffeur', emptyOutDir: true }
+          })
+          EOF
+          npx vite build --config vite.chauffeur.config.js
+        env:
+          VITE_APP_MODE: chauffeur
+
+      - name: Write capacitor.config.json (Chauffeur)
+        run: |
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "sn.dakar.chauffeur",
+            "appName": "DakarMobile Chauffeur",
+            "webDir": "dist-chauffeur",
+            "android": { "backgroundColor": "#166534" },
+            "plugins": {
+              "SplashScreen": { "launchShowDuration": 2000, "backgroundColor": "#166534" }
+            }
+          }
+          EOF
+
+      - name: Add & sync Android
+        run: |
+          npx cap add android 2>/dev/null || true
+          npx cap sync android
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build APK debug
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+        env:
+          GRADLE_OPTS: "-Xmx2g"
+
+      - name: Rename & stage APK
+        run: |
+          mkdir -p release
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             release/DakarMobile-Chauffeur-debug.apk
+
+      - name: Upload APK Chauffeur
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK-Chauffeur
+          path: release/DakarMobile-Chauffeur-debug.apk
+          retention-days: 30
