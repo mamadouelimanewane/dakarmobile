@@ -242,5 +242,3 @@ const ts = StyleSheet.create({
   closeQrBtn: { padding:SPACE.lg },
 });
 
-const COLORS = require('../utils/theme').COLORS;
-const { useSelector } = require('react-redux');
